@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Crop Recommendation</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-image: url("{{ url_for('static', filename='images/farm_bg.jpg') }}");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .card {
+      backdrop-filter: blur(8px);
+      background-color: rgba(255, 255, 255, 0.85);
+      border-radius: 20px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .crop-img {
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container py-5">
+
+    <h2 class="text-center mb-4 fw-bold text-success">🌾 Crop Recommendation</h2>
+    <p class="text-center text-dark mb-5">
+      Enter your soil and environmental parameters to get the best crops to grow.
+    </p>
+
+    <!-- ================= FORM ================= -->
+    <div class="row justify-content-center mb-5">
+      <div class="col-md-8">
+        <form method="POST" action="{{ url_for('crop_recommendation') }}" class="card p-4">
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label class="form-label">Soil Type</label>
+              <select name="soil_type" class="form-select" required>
+                <option value="" disabled selected>-- Select Soil Type --</option>
+                <option value="alluvial">Alluvial</option>
+                <option value="black">Black</option>
+                <option value="red">Red</option>
+                <option value="laterite">Laterite</option>
+                <option value="arid">Arid</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">pH Level</label>
+              <input type="number" step="0.1" name="ph" class="form-control" required>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Nitrogen (kg/acre)</label>
+              <input type="number" step="0.1" name="nitrogen" class="form-control" required>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Phosphorus (kg/acre)</label>
+              <input type="number" step="0.1" name="phosphorus" class="form-control" required>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Potassium (kg/acre)</label>
+              <input type="number" step="0.1" name="potassium" class="form-control" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Temperature (°C)</label>
+              <input type="number" step="0.1" name="temperature" class="form-control" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Humidity (%)</label>
+              <input type="number" step="0.1" name="humidity" class="form-control" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Rainfall (mm)</label>
+              <input type="number" step="0.1" name="rainfall" class="form-control" required>
+            </div>
+
+            <div class="col-12 text-center">
+              <button class="btn btn-success px-4 mt-3">
+                Get Recommendations
+              </button>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================= RESULTS ================= -->
+    {% if recommendation_results %}
+      <h3 class="text-center mb-4 text-success fw-bold">
+        Recommended Crops
+      </h3>
+
+      <div class="row g-4">
+        {% for crop in recommendation_results %}
+          <div class="col-md-4">
+            <div class="card p-3 h-100 text-center">
+
+              <img src="{{ url_for('static',
+                  filename='images/crops/' + (crop.image or 'default.jpg')) }}"
+                   class="crop-img mb-3"
+                   alt="{{ crop.name }}">
+
+              <h5 class="fw-bold text-primary">{{ crop.name }}</h5>
+              <p class="text-dark">{{ crop.description }}</p>
+
+              <ul class="list-unstyled text-start">
+                <li><strong>Duration:</strong> {{ crop.duration }} days</li>
+                <li><strong>Fertilizer:</strong> {{ crop.fertilizer }}</li>
+                <li><strong>Expected Profit:</strong> ₹{{ crop.expected_profit }}</li>
+                <li><strong>Sowing Season:</strong> {{ crop.sowing_season }}</li>
+              </ul>
+
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="text-center mt-5">
+      <a href="{{ url_for('home') }}" class="btn btn-outline-dark">
+        ⬅ Back to Home
+      </a>
+    </div>
+
+  </div>
+</body>
+</html>

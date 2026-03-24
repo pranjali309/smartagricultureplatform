@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | Smart Online Agriculture Project</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f7f9f7; font-family: "Poppins", sans-serif; }
+    .navbar { background: linear-gradient(90deg, #2e8b57, #4CAF50); }
+    .navbar-brand, .nav-link { color: white !important; }
+    .about-section { background: url("/static/images/farm-banner") center/cover no-repeat; padding: 280px 0; color: white; text-shadow: 1px 1px 4px rgba(0,0,0,0.6); }
+    .about-section h1 { font-size: 3rem; font-weight: 700; }
+    .content-section { padding: 60px 20px; }
+    .feature-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .feature-card:hover { transform: translateY(-5px); box-shadow: 0 6px 18px rgba(0,0,0,0.2); }
+    .team-img { width: 150px; height: 150px; object-fit: cover; border-radius: 50%; }
+ 
+    /* Footer */
+    .footer a {
+      color: #ffffff;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .footer a:hover {
+      color: #d4f5d4;
+      text-decoration: underline;
+    }
+
+    .footer-links li {
+      margin-bottom: 8px;
+    }
+
+    .social-icons a {
+      font-size: 1.2rem;
+      margin-right: 12px;
+      color: white;
+      transition: 0.3s;
+    }
+
+    .social-icons a:hover {
+      color: #d4f5d4;
+      transform: translateY(-3px);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-success">
+  <div class="container-fluid">
+    <a class="navbar-brand text-white fw-bold" href="{{ url_for('home') }}">🌾 Smart Agriculture</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('home') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('about') }}">About</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" id="aiServicesDropdown" role="button" data-bs-toggle="dropdown">AI Services</a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aiServicesDropdown">
+            {% set tools = [
+              ('Best Crop To Plant','crop_recommendation'),
+              ('Yield Prediction','yield_prediction'),
+              ('Disease Detection','disease_detection'),
+              ('Seed Quality Detection','seed_quality'),
+              ('Rainfall Prediction','rainfall_prediction'),
+              ('Climate Advisory System','climate_advisory'),
+              ('Mixed Crop Planning','mixed_crop'),
+              ('Water Requirement Forecasting','water_forecast'),
+              ('Market Demand Forecasting','market_forecast'),
+              ('Harvest Time Prediction','harvest_prediction'),
+              ('AI Chatbot for Farmers','chatbot'),
+              ('Agri E-Commerce Suggestions','ecommerce_tools')
+            ] %}
+            {% for t in tools %}
+              <li>
+                <a class="dropdown-item" href="{% if session.get('user') %}{{ url_for(t[1]) }}{% else %}{{ url_for('login') }}{% endif %}">{{ t[0] }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('contact') }}">Contact</a></li>
+        {% if not session.get('user') %}
+          <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('login') }}">Login / Register</a></li>
+        {% else %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">👤 {{ session['user'] }}</a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="{{ url_for('profile') }}">My Profile</a></li>
+              <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="about-section text-center">
+  <div class="container">
+    <h1>About Smart Online Agriculture</h1>
+    <p class="lead mt-3">Empowering farmers with technology, data, and innovation 🌱</p>
+  </div>
+</section>
+
+<!-- Mission / Vision -->
+<section class="content-section">
+  <div class="container">
+    <div class="row align-items-center mb-5">
+      <div class="col-md-6">
+        <img src="/static/images/smart-farming.jpg" alt="Smart Farming" class="img-fluid rounded shadow">
+      </div>
+      <div class="col-md-6">
+        <h2 class="fw-bold mb-3">Our Mission</h2>
+        <p>We aim to revolutionize traditional farming with IoT, AI, and data analytics.</p>
+        <p>Our vision is a sustainable, efficient agricultural system empowering every farmer to make informed decisions.</p>
+        <p>We focus on:</p>
+        <ul>
+          <li>Implementing smart irrigation and soil management solutions.</li>
+          <li>Integrating AI for disease detection and pest control.</li>
+          <li>Providing actionable insights through weather and market analytics.</li>
+          <li>Promoting eco-friendly and sustainable farming practices.</li>
+          <li>Ensuring farmers have access to affordable technology and training.</li>
+        </ul>
+        <p>Our goal is not just to increase yield, but also to improve farmer livelihoods, reduce resource waste, and ensure environmental sustainability.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Key Features -->
+<section class="content-section bg-light">
+  <div class="container text-center">
+    <h2 class="fw-bold mb-4">Key Features 🌾</h2>
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <div class="card feature-card p-3 border-0 shadow-sm">
+          <img src="/static/images/iot-sensor.jpg" class="card-img-top rounded" alt="IoT Sensors">
+          <div class="card-body">
+            <h5 class="card-title">IoT-based Monitoring</h5>
+            <p class="card-text">Real-time tracking of soil moisture, temperature, and humidity.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card feature-card p-3 border-0 shadow-sm">
+          <img src="/static/images/ai-analytics.jpg" class="card-img-top rounded" alt="AI Analytics">
+          <div class="card-body">
+            <h5 class="card-title">AI Crop Analytics</h5>
+            <p class="card-text">Predictive insights for better yield and pest management.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card feature-card p-3 border-0 shadow-sm">
+          <img src="/static/images/farmer-support.jpg" class="card-img-top rounded" alt="Farmer Support">
+          <div class="card-body">
+            <h5 class="card-title">Farmer Assistance</h5>
+            <p class="card-text">Personalized tips, weather forecasts, and expert guidance.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card feature-card p-3 border-0 shadow-sm">
+          <img src="/static/images/drone-monitoring.jpg" class="card-img-top rounded" alt="Drone Monitoring">
+          <div class="card-body">
+            <h5 class="card-title">Drone Monitoring</h5>
+            <p class="card-text">Aerial surveillance to detect crop stress, pests, and irrigation needs.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card feature-card p-3 border-0 shadow-sm">
+          <img src="/static/images/market-insights.jpg" class="card-img-top rounded" alt="Market Insights">
+          <div class="card-body">
+            <h5 class="card-title">Market Insights</h5>
+            <p class="card-text">Data-driven recommendations for crop selling prices and trends.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card feature-card p-3 border-0 shadow-sm">
+          <img src="/static/images/eco-friendly.jpg" class="card-img-top rounded" alt="Eco-Friendly Practices">
+          <div class="card-body">
+            <h5 class="card-title">Sustainable Farming</h5>
+            <p class="card-text">Promoting eco-friendly methods for soil health and sustainability.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Farming Videos Section -->
+<section class="content-section">
+  <div class="container text-center">
+    <h2 class="fw-bold mb-4">Farming Videos 🎬</h2>
+
+    <!-- Main Video -->
+    <div class="video-section mb-4" style="max-width:800px; margin: 0 auto;">
+      <video controls autoplay muted loop 
+             style="width:100%; height:auto; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.2);">
+        <source src="/static/vedios/work.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <!-- Description Box -->
+    <div class="video-description" style="
+          background-color: #ffffff;
+          border-radius: 12px;
+          padding: 25px 30px;
+          max-width: 800px;
+          margin: 30px auto;
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+          text-align: left;
+          font-size: 1.05rem;
+          line-height: 1.7;
+          color: #333333;
+        ">
+      <p>Farmers input data → IoT & AI analyze → Personalized insights → Improved yield & productivity.</p>
+      <p>Our videos showcase:</p>
+      <ul style="list-style: disc inside; margin-top: 15px;">
+        <li>How IoT sensors monitor soil and crop conditions in real-time.</li>
+        <li>AI algorithms predicting crop diseases and optimal planting schedules.</li>
+        <li>Drone surveillance for precise field analysis.</li>
+        <li>Best practices for sustainable farming and resource management.</li>
+        <li>Success stories of farmers leveraging technology to boost productivity.</li>
+      </ul>
+    </div>
+<!-- Drone Monitoring Video Section -->
+<section class="content-section">
+  <div class="container">
+    <h2 class="fw-bold mb-4 text-center">Drone Monitoring in Action 🎥</h2>
+
+    <!-- Outer rectangle div -->
+    <div style="
+      background-color: #f9f9f9;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+    ">
+      <div class="row align-items-center">
+        <!-- Video on the left -->
+        <div class="col-md-6 mb-4">
+          <video controls autoplay muted loop 
+                 style="width:100%; height:auto; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.2);">
+            <source src="/static/vedios/farmer2.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+
+        <!-- Information on the right -->
+        <div class="col-md-6">
+          <p>Watch how drones scan large fields to detect crop stress, monitor irrigation levels, and identify pest infestations. 
+             This technology helps farmers make informed decisions quickly, reduces manual labor, and optimizes resource usage.</p>
+          <p><strong>In this video, you will see:</strong></p>
+          <ul style="padding-left:20px;">
+            <li>Real-time aerial mapping of fields for crop health analysis.</li>
+            <li>Detection of under-watered or over-watered areas for efficient irrigation.</li>
+            <li>Identification of pest-affected zones to target treatments accurately.</li>
+            <li>Integration of drone data with AI algorithms for predictive insights.</li>
+            <li>How drone technology contributes to higher yields and sustainable farming practices.</li>
+          </ul>
+          <p>Experience how modern technology empowers farmers to manage their crops efficiently and sustainably.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+
+<!-- Testimonials -->
+<section class="content-section bg-light">
+  <div class="container text-center">
+    <h2 class="fw-bold mb-4">What People Say</h2>
+    <blockquote class="blockquote mb-4">
+      <p>“Smart Farming is the future of agriculture — and the future starts now.” 🌍</p>
+      <footer class="blockquote-footer">John Doe, Expert Farmer</footer>
+    </blockquote>
+    <blockquote class="blockquote mb-4">
+      <p>“Thanks to Smart Agriculture, we increased our crop yield by 30% while reducing water usage.” 💧</p>
+      <footer class="blockquote-footer">Priya Sharma, Farmer</footer>
+    </blockquote>
+    <blockquote class="blockquote mb-4">
+      <p>“The AI crop analytics and IoT monitoring have completely changed how I plan my farming activities.” 🌱</p>
+      <footer class="blockquote-footer">Rahul Mehta, Organic Farmer</footer>
+    </blockquote>
+    <blockquote class="blockquote">
+      <p>“This platform bridges the gap between technology and traditional farming, making it accessible to everyone.” 🤝</p>
+      <footer class="blockquote-footer">Anita Verma, Agricultural Consultant</footer>
+    </blockquote>
+  </div>
+</section>
+
+<!-- Team Section -->
+<section class="content-section">
+  <div class="container text-center">
+    <h2 class="fw-bold mb-4">Meet Our Team</h2>
+    <div class="row justify-content-center">
+      <div class="col-md-3 mb-4">
+        <img src="/static/images/team1.jpg" class="team-img mb-2" alt="Team Member 1">
+        <h5>Ravi Kumar</h5>
+        <p>Founder & CEO</p>
+      </div>
+      <div class="col-md-3 mb-4">
+        <img src="/static/images/team2.jpg" class="team-img mb-2" alt="Team Member 2">
+        <h5>Sneha Patil</h5>
+        <p>AI Specialist</p>
+      </div>
+      <div class="col-md-3 mb-4">
+        <img src="/static/images/team3.jpg" class="team-img mb-2" alt="Team Member 3">
+        <h5>Ajay Deshmukh</h5>
+        <p>IoT Engineer</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call-to-Action Section -->
+<div class="join-us-section text-center" style="
+     background-color: #2e8b57;  /* हिरव्या gradient बदलू शकता */
+     color: white;
+     padding: 80px 20px;        /* वर-खाली space */
+     border-radius: 12px;
+     margin: 50px auto;
+     max-width: 900px;
+     box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+     text-align: center;
+">
+  <h2 class="fw-bold mb-4" style="font-size: 2.5rem;">Join Us & Experience Smart Farming</h2>
+  <p class="mb-4" style="font-size: 1.2rem;">Empower your farm with AI, IoT, and modern agriculture technology.</p>
+  <a href="{{ url_for('register') }}" class="btn btn-light btn-lg">Get Started</a>
+</div>
+
+<!-- ================= UPDATED FOOTER ================= -->
+<footer style="background: linear-gradient(90deg, #2e8b57, #4CAF50); color: white;" class="pt-5 pb-4">
+  <div class="container">
+
+    <div class="row gy-4">
+
+      <!-- About -->
+      <div class="col-md-4 mb-4">
+        <h5 class="fw-bold">🌾 Smart Online Agriculture</h5>
+        <p>Empowering farmers with technology, data, and innovation.
+        We provide AI-driven insights, IoT monitoring, and sustainable farming solutions.</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-md-2 mb-4">
+        <h5 class="fw-bold">Quick Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ url_for('home') }}" class="text-white text-decoration-none footer-link">Home</a></li>
+          <li><a href="{{ url_for('about') }}" class="text-white text-decoration-none footer-link">About</a></li>
+          <li><a href="{{ url_for('contact') }}" class="text-white text-decoration-none footer-link">Contact</a></li>
+          <li><a href="{{ url_for('login') }}" class="text-white text-decoration-none footer-link">Login / Register</a></li>
+        </ul>
+      </div>
+
+      <!-- Services -->
+      <div class="col-md-3 mb-4">
+        <h5 class="fw-bold">Our Services</h5>
+        <ul class="list-unstyled small">
+          <li>
+            <a href="{{ url_for('crop_recommendation') }}" class="text-white text-decoration-none fw-bold">Crop Recommendation</a>
+            <!-- <p class="mb-1">AI-based suggestions for the best crops to plant.</p> -->
+          </li>
+          <li>
+            <a href="{{ url_for('yield_prediction') }}" class="text-white text-decoration-none fw-bold">Yield Prediction</a>
+            <!-- <p class="mb-1">Forecast optimal yield and improve planning.</p> -->
+          </li>
+          <li>
+            <a href="{{ url_for('disease_detection') }}" class="text-white text-decoration-none fw-bold">Disease Detection</a>
+            <!-- <p class="mb-1">Early alerts for pests and crop diseases.</p> -->
+          </li>
+          <li>
+            <a href="{{ url_for('market_forecast') }}" class="text-white text-decoration-none fw-bold">Market Insights</a>
+            <!-- <p class="mb-1">Price trends and demand analysis for crops.</p> -->
+          </li>
+        </ul>
+      </div>
+
+      <!-- Contact Info & Social Icons -->
+      <div class="col-md-3 mb-4">
+        <h5 class="fw-bold">Contact Us</h5>
+        <p><i class="bi bi-geo-alt-fill me-2"></i>123 Farm Street, City, Country</p>
+        <p><i class="bi bi-envelope-fill me-2"></i><a href="mailto:info@smartagriculture.com" class="text-white text-decoration-none">info@smartagriculture.com</a></p>
+        <p><i class="bi bi-telephone-fill me-2"></i><a href="tel:+911234567890" class="text-white text-decoration-none">+91 123 456 7890</a></p>
+
+        <div class="mt-2">
+          <a href="https://facebook.com" target="_blank" class="text-white me-3 social-icon"><i class="bi bi-facebook fs-5"></i></a>
+          <a href="https://twitter.com" target="_blank" class="text-white me-3 social-icon"><i class="bi bi-twitter fs-5"></i></a>
+          <a href="https://instagram.com" target="_blank" class="text-white me-3 social-icon"><i class="bi bi-instagram fs-5"></i></a>
+          <a href="https://linkedin.com" target="_blank" class="text-white social-icon"><i class="bi bi-linkedin fs-5"></i></a>
+        </div>
+      </div>
+
+    </div>
+
+    <hr style="border-color: rgba(255,255,255,0.5);">
+
+    <div class="text-center pt-3 small">
+      &copy; 2025 Smart Online Agriculture Project | Designed with ❤️ for Farmers
+    </div>
+
+  </div>
+
+  <!-- Footer Styles -->
+  <style>
+    .footer-link:hover { color: #d4f7d4; text-decoration: underline; transition: 0.3s; }
+    .social-icon:hover { color: #a5e3a5; transition: 0.3s; }
+    .small p { margin-bottom: 0.25rem; }
+  </style>
+
+</footer>
+
+<!-- Bootstrap Icons CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

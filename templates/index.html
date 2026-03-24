@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Agriculture Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: #f8faf9; }
+
+    /* Navbar */
+    .navbar { background: linear-gradient(90deg, #2e8b57, #4CAF50); }
+    .navbar-brand, .nav-link { color: white !important; }
+
+    /* Hero Section */
+    .hero {
+      background: url('https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
+      color: white; text-align: center; padding: 190px 20px; position: relative;
+    }
+    .hero::before { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
+    .hero-content { position: relative; z-index: 1; }
+
+    /* Cards */
+    .card {
+      border: none; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+
+    /* Section Titles */
+    h2.section-title { margin-top: 60px; margin-bottom: 30px; font-weight: bold; color: #2e8b57; }
+
+    /* Footer */
+    footer { background: #2e8b57; color: white; text-align: center; padding: 20px 0; margin-top: 50px; }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-success">
+  <div class="container-fluid">
+    <a class="navbar-brand text-white fw-bold" href="{{ url_for('home') }}">🌾 Smart Agriculture</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('home') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('about') }}">About</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" id="aiServicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">AI Services</a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="aiServicesDropdown">
+            {% set tools = [
+              ('Best Crop To Plant','crop_recommendation'),
+              ('Yield Prediction','yield_prediction'),
+              ('Disease Detection','disease_detection'),
+              ('Seed Quality Detection','seed_quality'),
+              ('Rainfall Prediction','rainfall_prediction'),
+              ('Climate Advisory System','climate_advisory'),
+              ('Mixed Crop Planning','mixed_crop'),
+              ('Water Requirement Forecasting','water_forecast'),
+              ('Market Demand Forecasting','market_forecast'),
+              ('Harvest Time Prediction','harvest_prediction'),
+              ('AI Chatbot for Farmers','chatbot'),
+              ('Agri E-Commerce Suggestions','ecommerce_tools')
+            ] %}
+            {% for t in tools %}
+              <li>
+                <a class="dropdown-item" href="{% if session.get('user') %}{{ url_for(t[1]) }}{% else %}{{ url_for('login') }}{% endif %}">{{ t[0] }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('contact') }}">Contact</a></li>
+        {% if not session.get('user') %}
+          <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('login') }}">Login / Register</a></li>
+        {% else %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">👤 {{ session['user'] }}</a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="{{ url_for('profile') }}">My Profile</a></li>
+              <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="fw-bold display-4">🌱 Smart Agriculture Platform</h1>
+    <p class="lead">All-in-one place for Farmers — AI • Weather • Market • Insights</p>
+    <a href="#smart-tools" class="btn btn-light btn-lg mt-3">Explore Smart Tools</a>
+  </div>
+</section>
+
+<!-- Real-Time Farm Insights -->
+<div class="container text-center">
+  <h2 class="section-title">🌤 Real-Time Farm Insights</h2>
+  <div class="row g-4">
+    <div class="col-md-4"><div class="card p-3"><h5>Temperature</h5><h2 id="temp">--°C</h2></div></div>
+    <div class="col-md-4"><div class="card p-3"><h5>Humidity</h5><h2 id="humidity">--%</h2></div></div>
+    <div class="col-md-4"><div class="card p-3"><h5>Soil Moisture</h5><h2 id="soil">--%</h2></div></div>
+  </div>
+</div>
+
+<!-- Live Farm Video + Location -->
+<div class="container my-5">
+  <div class="row align-items-center">
+    <div class="col-md-6 mb-4 mb-md-0">
+      <div class="ratio ratio-16x9 shadow rounded">
+        <!-- Corrected video path using Flask's url_for -->
+        <video controls class="w-100 h-100 rounded">
+          <source src="{{ url_for('static', filename='vedios/farmer.mp4') }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <p class="text-center text-muted mt-2">🎥 Live Smart Farm Monitoring</p>
+    </div>
+    <div class="col-md-6">
+      <div class="card p-3 shadow-sm">
+        <h5 class="text-success fw-bold mb-3">
+          <a href="{% if session.get('user') %}{{ url_for('disease_detection') }}{% else %}{{ url_for('login') }}{% endif %}" class="text-success text-decoration-none">
+            📍 SmartAgri Support Center
+          </a>
+        </h5>
+        <div class="ratio ratio-16x9">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3818.2509081533037!2d74.0183!3d17.6805!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc236c88d1b9f3f%3A0x1a2b3c4d5e6f7080!2sSmartAgri%20Support%20Center!5e0!3m2!1sen!2sin!4v1700000000001!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <p class="text-muted mt-2 small">Official Help & Support Point 🌾</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Smart Tools -->
+<section id="smart-tools" class="container text-center my-5">
+  <h2 class="section-title mb-4">🤖 Explore Smart Tools</h2>
+  <div class="row g-4">
+    {% set tools = [
+      ('Best Crop To Plant','Based on soil & weather data','Analyze Now','crop_recommendation'),
+      ('Yield Prediction','Predict crop yield before harvest','Predict Now','yield_prediction'),
+      ('Disease Detection','Upload leaf photo for instant diagnosis','Upload Photo','disease_detection'),
+      ('Seed Quality Detection','Detect seed viability using AI','Check Quality','seed_quality'),
+      ('Rainfall Prediction','Forecast rainfall for your region','Check Forecast','rainfall_prediction'),
+      ('Climate Advisory System','AI-based farm advisory','View Advisory','climate_advisory'),
+      ('Mixed Crop Planning','Suggests compatible crops','Plan Now','mixed_crop'),
+      ('Water Requirement Forecasting','AI-based irrigation insights','Calculate Now','water_forecast'),
+      ('Market Demand Forecasting','Predict which crop will sell best','Forecast Demand','market_forecast'),
+      ('Harvest Time Prediction','Estimate ideal harvest time','Predict Time','harvest_prediction'),
+      ('AI Chatbot for Farmers','Talk with smart assistant','Start Chat','chatbot'),
+      ('Agri E-Commerce Suggestions','Find best platforms','Explore Stores','ecommerce_tools')
+    ] %}
+    {% for t in tools %}
+      <div class="col-md-4 col-sm-6">
+        <div class="card p-3 h-100" style="max-width:300px; margin:auto;">
+          <h5 class="fw-bold text-success">{{ t[0] }}</h5>
+          <p class="text-muted small">{{ t[1] }}</p>
+          <a href="{% if session.get('user') %}{{ url_for(t[3]) }}{% else %}{{ url_for('login') }}{% endif %}" class="btn btn-outline-success mt-2">{{ t[2] }}</a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Live Market Prices -->
+<section id="market-prices" class="container my-5">
+  <h2 class="section-title text-center">📊 Live Market Prices</h2>
+  <div class="row g-3 justify-content-center mt-4" id="market-prices-container">
+    {% for crop, price in prices.items() %}
+      <div class="col-md-2 col-sm-4 col-6">
+        <div class="card text-center h-100 p-2 shadow-sm">
+          <h5 class="fw-bold text-success">{{ crop }}</h5>
+          <p class="text-muted mb-0">{{ price }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ================= UPDATED FOOTER ================= -->
+<footer style="background: linear-gradient(90deg, #2e8b57, #4CAF50); color: white;" class="pt-5 pb-4">
+  <div class="container">
+
+    <div class="row gy-4">
+
+      <!-- About -->
+      <div class="col-md-4 mb-4">
+        <h5 class="fw-bold">🌾 Smart Online Agriculture</h5>
+        <p>Empowering farmers with technology, data, and innovation.
+        We provide AI-driven insights, IoT monitoring, and sustainable farming solutions.</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-md-2 mb-4">
+        <h5 class="fw-bold">Quick Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ url_for('home') }}" class="text-white text-decoration-none footer-link">Home</a></li>
+          <li><a href="{{ url_for('about') }}" class="text-white text-decoration-none footer-link">About</a></li>
+          <li><a href="{{ url_for('contact') }}" class="text-white text-decoration-none footer-link">Contact</a></li>
+          <li><a href="{{ url_for('login') }}" class="text-white text-decoration-none footer-link">Login / Register</a></li>
+        </ul>
+      </div>
+
+      <!-- Services -->
+      <div class="col-md-3 mb-4">
+        <h5 class="fw-bold">Our Services</h5>
+        <ul class="list-unstyled small">
+          <li>
+            <a href="{{ url_for('crop_recommendation') }}" class="text-white text-decoration-none fw-bold">Crop Recommendation</a>
+            <!-- <p class="mb-1">AI-based suggestions for the best crops to plant.</p> -->
+          </li>
+          <li>
+            <a href="{{ url_for('yield_prediction') }}" class="text-white text-decoration-none fw-bold">Yield Prediction</a>
+            <!-- <p class="mb-1">Forecast optimal yield and improve planning.</p> -->
+          </li>
+          <li>
+            <a href="{{ url_for('disease_detection') }}" class="text-white text-decoration-none fw-bold">Disease Detection</a>
+            <!-- <p class="mb-1">Early alerts for pests and crop diseases.</p> -->
+          </li>
+          <li>
+            <a href="{{ url_for('market_forecast') }}" class="text-white text-decoration-none fw-bold">Market Insights</a>
+            <!-- <p class="mb-1">Price trends and demand analysis for crops.</p> -->
+          </li>
+        </ul>
+      </div>
+
+      <!-- Contact Info & Social Icons -->
+      <div class="col-md-3 mb-4">
+        <h5 class="fw-bold">Contact Us</h5>
+        <p><i class="bi bi-geo-alt-fill me-2"></i>123 Farm Street, City, Country</p>
+        <p><i class="bi bi-envelope-fill me-2"></i><a href="mailto:info@smartagriculture.com" class="text-white text-decoration-none">info@smartagriculture.com</a></p>
+        <p><i class="bi bi-telephone-fill me-2"></i><a href="tel:+911234567890" class="text-white text-decoration-none">+91 123 456 7890</a></p>
+
+        <div class="mt-2">
+          <a href="https://facebook.com" target="_blank" class="text-white me-3 social-icon"><i class="bi bi-facebook fs-5"></i></a>
+          <a href="https://twitter.com" target="_blank" class="text-white me-3 social-icon"><i class="bi bi-twitter fs-5"></i></a>
+          <a href="https://instagram.com" target="_blank" class="text-white me-3 social-icon"><i class="bi bi-instagram fs-5"></i></a>
+          <a href="https://linkedin.com" target="_blank" class="text-white social-icon"><i class="bi bi-linkedin fs-5"></i></a>
+        </div>
+      </div>
+
+    </div>
+
+    <hr style="border-color: rgba(255,255,255,0.5);">
+
+    <div class="text-center pt-3 small">
+      &copy; 2025 Smart Online Agriculture Project | Designed with ❤️ for Farmers
+    </div>
+
+  </div>
+
+  <!-- Footer Styles -->
+  <style>
+    .footer-link:hover { color: #d4f7d4; text-decoration: underline; transition: 0.3s; }
+    .social-icon:hover { color: #a5e3a5; transition: 0.3s; }
+    .small p { margin-bottom: 0.25rem; }
+  </style>
+
+</footer>
+
+<!-- Bootstrap Icons CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ------------------ Save farm data to server ONLY once per 1 hour ------------------
+let lastSavedTime = 0;
+
+async function sendFarmDataToServer(temp, hum, soil) {
+  const now = Date.now();
+
+  // Save only if 1 hour has passed
+  if (now - lastSavedTime < 3600000) {
+    console.log("⏳ Not saving yet… Only 1 hour interval allowed.");
+    return;
+  }
+
+  lastSavedTime = now;  // update timestamp
+
+  try {
+    const res = await fetch('/api/save_farm_data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        temperature: temp,
+        humidity: hum,
+        soil_moisture: soil
+      })
+    });
+
+    const result = await res.json();
+    console.log("✅ Saved to DB:", result);
+
+  } catch (e) {
+    console.error("❌ Error saving:", e);
+  }
+}
+
+// ------------------ Random data (temporary until real sensor is used) ------------------
+function getRandomFarmData() {
+  return {
+    temperature: (20 + Math.random() * 10).toFixed(1),
+    humidity: (40 + Math.random() * 30).toFixed(0),
+    soil_moisture: (20 + Math.random() * 50).toFixed(0)
+  };
+}
+
+// ------------------ Update dashboard ------------------
+async function updateFarmData() {
+  try {
+    const res = await fetch('/api/get_farm_data');
+    const data = await res.json();
+
+    let temp, hum, soil;
+
+    if (data.temperature !== undefined) {
+      temp = data.temperature;
+      hum = data.humidity;
+      soil = data.soil_moisture;
+    } else {
+      // If table is empty → use random data
+      const random = getRandomFarmData();
+      temp = random.temperature;
+      hum = random.humidity;
+      soil = random.soil_moisture;
+    }
+
+    // Update UI
+    document.getElementById('temp').innerText = temp + "°C";
+    document.getElementById('humidity').innerText = hum + "%";
+    document.getElementById('soil').innerText = soil + "%";
+
+    // Save only once per 1 hour
+    sendFarmDataToServer(temp, hum, soil);
+
+  } catch (e) {
+    console.error("Fetch error:", e);
+  }
+}
+
+// UI refresh every 5 seconds
+setInterval(updateFarmData, 5000);
+updateFarmData();
+
+
+// ------------------ Market Price Update ------------------
+async function updateMarketPrices() {
+  try {
+    const res = await fetch('/api/get_prices');
+    const prices = await res.json();
+
+    const container = document.getElementById('market-prices-container');
+    container.innerHTML = "";
+
+    for (const [crop, price] of Object.entries(prices)) {
+      container.innerHTML += `
+        <div class="col-md-2 col-sm-4 col-6">
+          <div class="card text-center h-100 p-2 shadow-sm">
+            <h5 class="fw-bold text-success">${crop}</h5>
+            <p class="text-muted mb-0">${price}</p>
+          </div>
+        </div>
+      `;
+    }
+
+  } catch (e) {
+    console.error("Price fetch error:", e);
+  }
+}
+
+// Update prices every 1 minute
+setInterval(updateMarketPrices, 60000);
+updateMarketPrices();
+</script>
+
+</body>
+</html>

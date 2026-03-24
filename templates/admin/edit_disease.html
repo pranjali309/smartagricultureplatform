@@ -1,0 +1,29 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h3 class="text-success mb-3">Edit Disease Record</h3>
+  <form method="POST" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label>User</label>
+      <input type="text" name="user" class="form-control" value="{{ row.user }}" required>
+    </div>
+    <div class="mb-3">
+      <label>Disease</label>
+      <input type="text" name="disease" class="form-control" value="{{ row.disease }}" required>
+    </div>
+    <div class="mb-3">
+      <label>Remedy</label>
+      <textarea name="remedy" class="form-control" required>{{ row.remedy }}</textarea>
+    </div>
+    <div class="mb-3">
+      <label>Image</label>
+      <input type="file" name="image" class="form-control">
+      {% if row.image %}
+        <img src="{{ url_for('static', filename='uploads/' ~ row.image) }}" width="150" class="mt-2">
+      {% endif %}
+    </div>
+    <button type="submit" class="btn btn-success">Update</button>
+    <a href="{{ url_for('admin_disease_detections') }}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-start py-5">
+    <div class="card shadow-sm w-75">
+        <div class="card-header bg-success text-white text-center py-3">
+            <h3 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Edit Seed Quality Usage</h3>
+        </div>
+
+        <div class="card-body p-4">
+            <form method="POST" enctype="multipart/form-data">
+                <!-- User Email -->
+                <div class="mb-3">
+                    <label class="form-label">User Email</label>
+                    <input type="email" class="form-control" name="user_email" 
+                           value="{{ row.user_email or row[1] }}" required>
+                </div>
+
+                <!-- Seed Type -->
+                <div class="mb-3">
+                    <label class="form-label">Seed Type</label>
+                    <input type="text" class="form-control" name="seed_type" 
+                           value="{{ row.seed_type or row[2] }}" required>
+                </div>
+
+                <!-- Sample Size -->
+                <div class="mb-3">
+                    <label class="form-label">Sample Size</label>
+                    <input type="number" class="form-control" name="sample_size" 
+                           value="{{ row.sample_size or row[3] }}" required>
+                </div>
+
+                <!-- Moisture -->
+                <div class="mb-3">
+                    <label class="form-label">Moisture</label>
+                    <input type="number" class="form-control" name="moisture" 
+                           value="{{ row.moisture or row[4] }}" required>
+                </div>
+
+                <!-- Purity -->
+                <div class="mb-3">
+                    <label class="form-label">Purity</label>
+                    <input type="number" class="form-control" name="purity" 
+                           value="{{ row.purity or row[5] }}" required>
+                </div>
+
+                <!-- Predicted Viability -->
+                <div class="mb-3">
+                    <label class="form-label">Predicted Viability</label>
+                    <input type="number" step="0.01" class="form-control" name="predicted_viability" 
+                           value="{{ row.predicted_viability or row[7] }}" required>
+                </div>
+
+                <!-- Recommendation -->
+                <div class="mb-3">
+                    <label class="form-label">Recommendation</label>
+                    <textarea class="form-control" name="recommendation" rows="4" required>{{ row.recommendation or row[8] }}</textarea>
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex gap-3">
+                    <button type="submit" class="btn btn-success flex-grow-1">
+                        <i class="bi bi-check-circle-fill me-2"></i> Update
+                    </button>
+                    <a href="{{ url_for('admin_seed_quality_usage') }}" class="btn btn-secondary flex-grow-1">
+                        <i class="bi bi-x-circle-fill me-2"></i> Cancel
+                    </a>
+                </div>
+
+                <!-- Current Image -->
+                {% if row.image %}
+                <div class="text-center mt-4">
+                    <h5 class="text-success">Current Image</h5>
+                    <img src="{{ url_for('static', filename='uploads/' ~ row.image) }}" 
+                         style="max-width:250px; border-radius:8px; box-shadow:0 4px 15px rgba(0,0,0,0.15);">
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

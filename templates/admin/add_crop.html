@@ -1,0 +1,127 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block sidebar %}
+<!-- 🌿 Sidebar -->
+<div class="sidebar">
+  <h3>🌾 Smart Admin</h3>
+  <a href="{{ url_for('admin_dashboard') }}" class="{% if active_page=='dashboard' %}active{% endif %}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+  <a href="{{ url_for('admin_all_users') }}" class="{% if active_page=='all_users' %}active{% endif %}"><i class="bi bi-people me-2"></i>All Users</a>
+  <a href="{{ url_for('admin_manage_users') }}" class="{% if active_page=='manage_users' %}active{% endif %}">Manage Users</a>
+  <a href="{{ url_for('admin_farm_insights') }}" class="{% if active_page=='farm_insights' %}active{% endif %}">Farm Insights Data</a>
+  <a href="{{ url_for('admin_live_prices') }}" class="{% if active_page=='live_prices' %}active{% endif %}">Live Market Prices</a>
+  <a href="{{ url_for('add_crop') }}" class="{% if active_page=='add_crop' %}active{% endif %}"><i class="bi bi-plus-circle me-2"></i>Add Crop</a>
+  <a href="{{ url_for('view_crops') }}" class="{% if active_page=='view_crops' %}active{% endif %}"><i class="bi bi-eye me-2"></i>View Crops</a>
+  <a href="{{ url_for('manage_crops') }}"><i class="bi bi-tools me-2"></i>Manage Crops</a>
+
+  <!-- Other admin routes -->
+  <a href="{{ url_for('admin_recommendations') }}">Best Crop Recommendation</a>
+  <a href="{{ url_for('admin_yield_predictions') }}">Crop Yield Prediction</a>
+  <a href="{{ url_for('admin_disease_detections') }}">Disease Detection</a>
+  <a href="{{ url_for('admin_seed_quality') }}">Seed Quality Detection</a>
+  <a href="{{ url_for('admin_rainfall_predictions') }}">Rainfall Prediction</a>
+  <a href="{{ url_for('admin_climate_advisories') }}">Climate Advisory System</a>
+  <a href="{{ url_for('admin_mixed_crops') }}">Mixed Crop Planning</a>
+  <a href="{{ url_for('admin_water_forecasts') }}">Water Requirement Forecasting</a>
+  <a href="{{ url_for('admin_market_forecasts') }}">Market Demand Forecasting</a>
+  <a href="{{ url_for('admin_harvest_predictions') }}">Harvest Time Prediction</a>
+  <a href="{{ url_for('admin_chatbot_logs') }}">AI Chatbot for Farmers</a>
+  <a href="{{ url_for('admin_ecommerce_tools') }}">Agri E-Commerce Suggestions</a>
+  <a href="{{ url_for('admin_contact_messages') }}">Contact Us Data</a>
+
+  <a href="{{ url_for('logout') }}" class="text-danger"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
+</div>
+{% endblock %}
+
+{% block topbar %}
+<!-- 🧭 Top Navbar -->
+<div class="topbar d-flex justify-content-between align-items-center px-3 shadow-sm">
+  <h5 class="mb-0 fw-bold text-success">Admin Dashboard</h5>
+  <div>👤 {{ session['user'] }}</div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container-main mt-4">
+  <h3 class="text-success fw-bold mb-4">🌱 Add New Crop</h3>
+
+  <form method="POST" enctype="multipart/form-data">
+    <div class="row g-3">
+
+      <!-- Crop Name -->
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Crop Name</label>
+        <input type="text" name="name" class="form-control" placeholder="Enter crop name" required>
+      </div>
+
+      <!-- Duration -->
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Duration</label>
+        <select name="duration" class="form-select">
+          <option value="">-- Select Duration --</option>
+          <option value="45 days">45 days</option>
+          <option value="60 days">60 days</option>
+          <option value="75 days">75 days</option>
+          <option value="90 days">90 days</option>
+          <option value="120 days">120 days</option>
+          <option value="150 days">150 days</option>
+          <option value="180 days">180 days</option>
+          <option value="Above 6 months">Above 6 months</option>
+        </select>
+      </div>
+
+      <!-- Fertilizer Used -->
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Fertilizer Used</label>
+        <select name="fertilizer" class="form-select">
+          <option value="">-- Select Fertilizer --</option>
+          <option value="Urea">Urea</option>
+          <option value="DAP">DAP</option>
+          <option value="MOP (Muriate of Potash)">MOP (Muriate of Potash)</option>
+          <option value="Compost / Organic">Compost / Organic</option>
+          <option value="NPK 10-26-26">NPK 10-26-26</option>
+          <option value="Super Phosphate">Super Phosphate</option>
+          <option value="Vermicompost">Vermicompost</option>
+          <option value="Ammonium Sulphate">Ammonium Sulphate</option>
+          <option value="Farmyard Manure (FYM)">Farmyard Manure (FYM)</option>
+        </select>
+      </div>
+
+      <!-- Expected Profit -->
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Expected Profit (₹)</label>
+        <input type="number" step="0.01" name="expected_profit" class="form-control" placeholder="e.g. 15000">
+      </div>
+
+      <!-- Sowing Season -->
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Sowing Season</label>
+        <select name="sowing_season" class="form-select">
+          <option value="">-- Select Season --</option>
+          <option value="Kharif">Kharif (June – October)</option>
+          <option value="Rabi">Rabi (November – April)</option>
+          <option value="Zaid">Zaid (March – June)</option>
+          <option value="All Seasons">All Seasons</option>
+        </select>
+      </div>
+
+      <!-- Image Upload -->
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Upload Image</label>
+        <input type="file" name="image" class="form-control">
+      </div>
+
+      <!-- Description -->
+      <div class="col-12">
+        <label class="form-label fw-semibold">Description</label>
+        <textarea name="description" class="form-control" rows="4" placeholder="Write short crop description..."></textarea>
+      </div>
+
+      <!-- Buttons -->
+      <div class="col-12 text-end mt-3">
+        <button type="submit" class="btn btn-success px-4">Add Crop</button>
+        <a href="{{ url_for('view_crops') }}" class="btn btn-secondary">Cancel</a>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

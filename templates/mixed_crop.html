@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mixed Crop Planning</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom right, #e0f7fa, #b2f7ef);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 40px;
+    }
+
+    .container {
+      background: #fff;
+      width: 90%;
+      max-width: 650px;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      color: #00796b;
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    p.subtitle {
+      color: #555;
+      margin-bottom: 25px;
+      font-size: 1rem;
+    }
+
+    form {
+      display: grid;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    input, select {
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 1rem;
+      width: 100%;
+    }
+
+    button[type="submit"] {
+      background-color: #00796b;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #004d40;
+    }
+
+    .result-box {
+      background-color: #f1fcfa;
+      border-left: 5px solid #00796b;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+      text-align: left;
+      animation: fadeIn 0.6s ease;
+    }
+
+    .result-box h2 {
+      color: #00796b;
+      margin-bottom: 10px;
+    }
+
+    .result-box ul {
+      list-style-type: '🌱 ';
+      padding-left: 20px;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 25px;
+    }
+
+    .btn {
+      text-decoration: none;
+      padding: 10px 25px;
+      border-radius: 10px;
+      font-size: 1rem;
+      color: white;
+      transition: 0.3s;
+    }
+
+    .btn-again {
+      background: #009688;
+    }
+
+    .btn-again:hover {
+      background: #00796b;
+    }
+
+    .btn-home {
+      background: #4db6ac;
+      color: #023e8a;
+    }
+
+    .btn-home:hover {
+      background: #80cbc4;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌾 Mixed Crop Planning</h1>
+    <p class="subtitle">Suggests compatible crops for intercropping</p>
+
+    <form method="POST">
+      <input type="text" name="main_crop" placeholder="Enter your main crop (e.g. Maize, Cotton, Rice)" required>
+      <button type="submit">Plan Now</button>
+    </form>
+
+    {% if main_crop %}
+    <div class="result-box">
+      <h2>🌱 Suggested Intercrops for {{ main_crop.title() }}</h2>
+      <ul>
+        {% for crop in compatible_crops %}
+          <li>{{ crop }}</li>
+        {% endfor %}
+      </ul>
+      <p><strong>Note:</strong> These combinations improve soil fertility, pest control, and yield sustainability.</p>
+    </div>
+
+    <div class="btn-container">
+      <a href="/mixed-crop" class="btn btn-again">🔄 Plan Again</a>
+      <a href="/" class="btn btn-home">🏠 Go to Home</a>
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>

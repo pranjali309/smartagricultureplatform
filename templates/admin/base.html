@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-light border-right" id="sidebar-wrapper">
+            <div class="sidebar-heading">Admin Panel</div>
+            <div class="list-group list-group-flush">
+                <a href="{{ url_for('admin_dashboard') }}" class="list-group-item list-group-item-action {% if active_page=='dashboard' %}active{% endif %}">Dashboard</a>
+                <a href="{{ url_for('admin_live_prices') }}" class="list-group-item list-group-item-action {% if active_page=='live_prices' %}active{% endif %}">Live Market Prices</a>
+                <a href="{{ url_for('admin_all_users') }}" class="list-group-item list-group-item-action {% if active_page=='users' %}active{% endif %}">Users</a>
+                <!-- Add more links here -->
+            </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                <button class="btn btn-primary" id="menu-toggle">Toggle Menu</button>
+                <span class="ml-auto">Logged in as {{ session.get('user', 'Admin') }}</span>
+            </nav>
+
+            <div class="container-fluid mt-4">
+                {% block content %}
+                <!-- Page-specific content goes here -->
+                {% endblock %}
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+    </div>
+
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script>
+        $("#menu-toggle").click(function(e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
+    </script>
+</body>
+</html>

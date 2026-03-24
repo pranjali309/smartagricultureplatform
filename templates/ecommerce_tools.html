@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agri E-Commerce Platforms</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background-color: #e8f5e9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2e7d32;
+            margin-top: 30px;
+            font-size: 2.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        h1::before {
+            content: "🌾";
+            font-size: 2rem;
+        }
+
+        .platform-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            padding: 40px;
+            max-width: 1300px;
+            margin: auto;
+        }
+
+        .platform-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .platform-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        .platform-card img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+
+        .platform-card h3 {
+            color: #2e7d32;
+            margin: 8px 0;
+            font-size: 1.3rem;
+        }
+
+        .platform-card p {
+            color: #444;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin: 10px 0 20px 0;
+            min-height: 50px;
+        }
+
+        .visit-btn {
+            background-color: #43a047;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .visit-btn:hover {
+            background-color: #2e7d32;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin: 30px auto;
+            background-color: #1b5e20;
+            color: white;
+            text-decoration: none;
+            padding: 10px 22px;
+            border-radius: 25px;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background-color: #43a047;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Agri E-Commerce Platforms</h1>
+
+    <div class="platform-container">
+        {% for platform in platforms %}
+        <div class="platform-card">
+            <img src="{{ platform.image }}" alt="{{ platform.name }}">
+            <h3>{{ platform.name }}</h3>
+            <p>{{ platform.description }}</p>
+            <a href="{{ platform.link }}" target="_blank">
+                <button class="visit-btn">Visit Store</button>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <a href="{{ url_for('home') }}" class="back-btn">⬅ Back to Home</a>
+
+</body>
+</html>

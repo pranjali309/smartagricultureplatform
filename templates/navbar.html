@@ -1,0 +1,41 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-success px-3">
+  <div class="container-fluid">
+    <a class="navbar-brand text-white fw-bold" href="{{ url_for('home') }}">
+      🌾 Smart Agriculture
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <form class="d-flex mx-auto w-50">
+        <input class="form-control me-2" type="search" placeholder="Search crops, fertilizers, tips..." aria-label="Search">
+        <button class="btn btn-light" type="submit">Search</button>
+      </form>
+
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('home') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('about') }}">About</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('ai_services') }}">AI Services</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('farmer_connect') }}">Farmer Connect</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('contact') }}">Contact Us</a></li>
+
+        {% if not session.get('user') %}
+          <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('login') }}">Login / Register</a></li>
+        {% else %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">
+              👤 {{ session['user'] }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="{{ url_for('profile') }}">My Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

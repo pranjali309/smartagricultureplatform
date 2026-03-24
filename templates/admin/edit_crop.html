@@ -1,0 +1,82 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+  <h3 class="text-success fw-bold mb-4">🌾 Edit Crop</h3>
+
+  <form method="POST" enctype="multipart/form-data">
+    <div class="row g-3">
+
+      <!-- Crop Name -->
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Crop Name</label>
+        <input type="text" name="name" value="{{ crop[1] }}" class="form-control" required>
+      </div>
+
+      <!-- Duration Dropdown -->
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Duration</label>
+        <select name="duration" class="form-select">
+          <option value="">-- Select Duration --</option>
+          {% for d in ['45 days','60 days','75 days','90 days','120 days','150 days','180 days','Above 6 months'] %}
+          <option value="{{ d }}" {% if crop[4] == d %}selected{% endif %}>{{ d }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Fertilizer Dropdown -->
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Fertilizer Used</label>
+        <select name="fertilizer" class="form-select">
+          <option value="">-- Select Fertilizer --</option>
+          {% for f in ['Urea','DAP','MOP (Muriate of Potash)','Compost / Organic','NPK 10-26-26','Super Phosphate','Vermicompost','Ammonium Sulphate','Farmyard Manure (FYM)'] %}
+          <option value="{{ f }}" {% if crop[5] == f %}selected{% endif %}>{{ f }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Expected Profit -->
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Expected Profit (₹)</label>
+        <input type="number" step="0.01" name="expected_profit" value="{{ crop[6] }}" class="form-control">
+      </div>
+
+      <!-- Sowing Season Dropdown -->
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Sowing Season</label>
+        <select name="sowing_season" class="form-select">
+          <option value="">-- Select Season --</option>
+          {% for s in ['Kharif','Rabi','Zaid','All Seasons'] %}
+          <option value="{{ s }}" {% if crop[7] == s %}selected{% endif %}>{{ s }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Image Upload -->
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Upload New Image (optional)</label>
+        <input type="file" name="image" class="form-control">
+        {% if crop[2] %}
+        <div class="mt-2">
+          <img src="{{ url_for('static', filename='uploads/' + crop[2]) }}" class="rounded shadow-sm" style="height:100px; object-fit:cover;">
+          <small class="d-block text-muted mt-1">Current image</small>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Description -->
+      <div class="col-12">
+        <label class="form-label fw-semibold">Description</label>
+        <textarea name="description" class="form-control" rows="4">{{ crop[3] }}</textarea>
+      </div>
+
+      <!-- Buttons -->
+      <div class="col-12 text-end mt-3">
+        <button type="submit" class="btn btn-success px-4">Update Crop</button>
+        <a href="{{ url_for('manage_crops') }}" class="btn btn-secondary">Cancel</a>
+      </div>
+
+    </div>
+  </form>
+</div>
+{% endblock %}

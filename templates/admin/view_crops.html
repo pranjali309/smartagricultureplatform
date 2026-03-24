@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Crops | Smart Agriculture</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f7f6;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+.sidebar {
+    width:250px; height:100vh; background:linear-gradient(180deg,#2e8b57,#4CAF50); color:white; position:fixed; top:0; left:0; padding-top:20px; overflow-y:auto;
+}
+.sidebar h3 { text-align:center; margin-bottom:20px; }
+.sidebar a { color:white; text-decoration:none; padding:12px 20px; display:block; }
+.sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.2); border-left:4px solid #fff; }
+
+/* Topbar */
+.topbar { margin-left:250px; background:white; height:60px; display:flex; align-items:center; justify-content:space-between; padding:0 20px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+
+    .content {
+      margin-left: 250px; /* sidebar width */
+      margin-top: 60px;  /* topbar height */
+      padding: 20px;
+    }
+/* Footer */
+footer {
+    margin-left:250px;
+    background:#2e8b57;
+    color:white;
+    text-align:center;
+    padding:2px;
+    position:fixed;
+    bottom:0;
+    width:calc(100% - 250px);
+}
+    /* Main Content */
+    .main-content {
+      margin-left: 240px;
+      padding: 90px 30px 30px;
+      min-height: calc(100vh - 120px);
+    }
+
+    /* Crop Cards */
+    .crop-card {
+      border-radius: 15px;
+      border: none;
+      transition: 0.3s;
+    }
+
+    .crop-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .crop-card img {
+      height: 200px;
+      object-fit: cover;
+      border-radius: 15px 15px 0 0;
+    }
+
+    
+  </style>
+</head>
+
+<body>
+
+  <!-- 🌿 Sidebar -->
+  <div class="sidebar">
+    <h3>🌾 Smart Admin</h3>
+    <a href="{{ url_for('admin_dashboard') }}" class="active"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+   
+<a href="{{ url_for('admin_all_users') }}">
+  <i class="bi bi-people me-2"></i>All Users
+</a>
+
+<a href="{{ url_for('admin_manage_users') }}" class="{% if active_page=='manage_users' %}active{% endif %}">Manage Users</a>
+<a href="{{ url_for('admin_farm_insights') }}" class="{% if active_page=='farm_insights' %}active{% endif %}">Farm Insights Data</a>
+<a href="{{ url_for('admin_live_prices') }}" class="{% if active_page=='live_prices' %}active{% endif %}">Live Market Prices</a>
+
+    
+    <a href="{{ url_for('add_crop') }}"><i class="bi bi-plus-circle me-2"></i>Add Crop</a>
+    <a href="{{ url_for('view_crops') }}"><i class="bi bi-eye me-2"></i>View Crops</a>
+    <a href="{{ url_for('manage_crops') }}"><i class="bi bi-tools me-2"></i>Manage Crops</a>
+    
+<!-- and so on for each admin route -->
+<a href="{{ url_for('admin_recommendations') }}">Best Crop Recommendation</a>
+<a href="{{ url_for('admin_yield_predictions') }}">Crop Yield Prediction</a>
+<a href="{{ url_for('admin_disease_detections') }}">Disease Detection</a>
+<a href="{{ url_for('admin_seed_quality') }}">Seed Quality Detection</a>
+<a href="{{ url_for('admin_rainfall_predictions') }}">Rainfall Prediction</a>
+<a href="{{ url_for('admin_climate_advisories') }}">Climate Advisory System</a>
+<a href="{{ url_for('admin_mixed_crops') }}">Mixed Crop Planning</a>
+<a href="{{ url_for('admin_water_forecasts') }}">Water Requirement Forecasting</a>
+<a href="{{ url_for('admin_market_forecasts') }}">Market Demand Forecasting</a>
+<a href="{{ url_for('admin_harvest_predictions') }}">Harvest Time Prediction</a>
+<a href="{{ url_for('admin_chatbot_logs') }}">AI Chatbot for Farmers</a>
+<a href="{{ url_for('admin_ecommerce_tools') }}">Agri E-Commerce Suggestions</a>
+<a href="{{ url_for('admin_contact_messages') }}">Contact Us Data</a>
+    
+    <a href="{{ url_for('logout') }}" class="text-danger"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
+  </div>
+
+  <!-- 🧭 Top Navbar -->
+  <div class="topbar">
+    <h5 class="mb-0 fw-bold text-success">Admin Dashboard</h5>
+    <div>👤 {{ session['user'] }}</div>
+  </div>
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+  <h3 class="text-success fw-bold mb-4 text-center">🌱 All Crops</h3>
+
+  <div class="row g-4">
+    {% for crop in crops %}
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+      <div class="card crop-card shadow-sm text-center h-100">
+
+        {% if crop[2] %}
+        <img src="{{ url_for('static', filename='uploads/' ~ crop[2]) }}" alt="{{ crop[1] }}">
+        {% else %}
+        <div class="bg-light d-flex align-items-center justify-content-center" style="height:200px;">
+          <span class="text-muted">No Image</span>
+        </div>
+        {% endif %}
+
+        <div class="card-body">
+          <h5 class="fw-bold text-success">{{ crop[1] }}</h5>
+          <a href="{{ url_for('crop_details', crop_id=crop[0]) }}"
+             class="btn btn-outline-success btn-sm mt-2">
+            View Details
+          </a>
+        </div>
+
+      </div>
+    </div>
+    {% else %}
+    <div class="col-12 text-center text-muted">
+      <p>No crops found</p>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 Smart Agriculture | Admin Panel
+  </footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

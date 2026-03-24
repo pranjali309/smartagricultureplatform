@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Agri Chatbot</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #c3ecb2, #7dd56f);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .chat-wrapper {
+      width: 450px;
+      height: 600px;
+      background-color: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background-color: #4caf50;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .chat-body {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background-color: #f4f9f4;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 10px 14px;
+      margin: 8px 0;
+      border-radius: 12px;
+      line-height: 1.5;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .bot-msg {
+      background-color: #e8f5e9;
+      color: #333;
+      align-self: flex-start;
+    }
+
+    .user-msg {
+      background-color: #4caf50;
+      color: #fff;
+      align-self: flex-end;
+      margin-left: auto;
+    }
+
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px;
+      background: #fff;
+      border-top: 1px solid #ddd;
+    }
+
+    .option-btn {
+      background-color: #81c784;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      padding: 8px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .option-btn:hover {
+      background-color: #66bb6a;
+    }
+
+    .footer-buttons {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 15px;
+      background-color: #e8f5e9;
+      border-top: 1px solid #ccc;
+    }
+
+    .footer-btn {
+      flex: 1;
+      margin: 0 5px;
+      padding: 8px;
+      border: none;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .chat-again {
+      background-color: #4caf50;
+      color: #fff;
+    }
+
+    .chat-again:hover {
+      background-color: #43a047;
+    }
+
+    .back-home {
+      background-color: #f1f8e9;
+      color: #388e3c;
+      border: 2px solid #4caf50;
+    }
+
+    .back-home:hover {
+      background-color: #c8e6c9;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="chat-wrapper">
+    <div class="chat-header">🌿 Smart Farming Assistant</div>
+    <div class="chat-body" id="chatBody"></div>
+    <div class="options" id="options"></div>
+    <div class="footer-buttons">
+      <button class="footer-btn chat-again" onclick="restartChat()">🔄 Chat Again</button>
+      <button class="footer-btn back-home" onclick="window.location.href='/'">🏠 Back to Home</button>
+    </div>
+  </div>
+
+  <script>
+    const chatBody = document.getElementById("chatBody");
+    const optionsDiv = document.getElementById("options");
+
+    function addMessage(text, sender) {
+      const div = document.createElement("div");
+      div.classList.add("message", sender === "user" ? "user-msg" : "bot-msg");
+      div.innerText = text;
+      chatBody.appendChild(div);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    async function sendChoice(choice) {
+      addMessage(choice, "user");
+
+      const res = await fetch("/chatbot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ choice })
+      });
+
+      const data = await res.json();
+      addMessage(data.reply, "bot");
+      renderOptions(data.options);
+    }
+
+    function renderOptions(options) {
+      optionsDiv.innerHTML = "";
+      options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.classList.add("option-btn");
+        btn.innerText = opt;
+        btn.onclick = () => sendChoice(opt);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function restartChat() {
+      chatBody.innerHTML = "";
+      optionsDiv.innerHTML = "";
+      sendChoice("start");
+    }
+
+    // Initialize chat
+    sendChoice("start");
+  </script>
+</body>
+</html>

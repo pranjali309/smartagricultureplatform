@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+  /* Dark mode */
+  body.dark-mode { 
+    background-color: #1a1a1a; 
+    color: #f0f0f0; 
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .card.dark-mode { 
+    background-color: #2c2c2c; 
+    color: #f0f0f0; 
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  /* Profile Picture */
+  .profile-pic { 
+    width: 130px; 
+    height: 130px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+    margin-bottom: 15px; 
+    border: 3px solid #28a745; /* Green border */
+  }
+
+  /* Button Group */
+  .btn-group-full { 
+    display:flex; 
+    justify-content:center; 
+    gap:10px; 
+    margin-top:20px; 
+  }
+
+  /* Buttons styling */
+  .btn-primary { background-color: #28a745; color: #fff; }
+  .btn-primary:hover { background-color: #218838; }
+  .btn-success { background-color: #fd1414; color: #fff; } /* Orange */
+  .btn-success:hover { background-color: #e76b0a; }
+  .btn-warning { background-color: #ffc107; color: #212529; } /* Yellow */
+  .btn-warning:hover { background-color: #e0a800; }
+  .btn-danger { background-color: #dc3545; color: #fff; }
+  .btn-danger:hover { background-color: #c82333; }
+  .btn-secondary { background-color: #6c757d; color: #fff; }
+  .btn-secondary:hover { background-color: #5a6268; }
+
+  /* Forms */
+  input.form-control { 
+    border-radius: 5px; 
+    transition: border-color 0.3s; 
+  }
+  input.form-control:focus { 
+    border-color: #28a745; 
+    box-shadow: 0 0 5px rgba(40,167,69,0.5);
+  }
+
+  /* Headings */
+  h2 { 
+    font-weight: 600; 
+    /* color: #fd7e14; Orange heading */
+  }
+
+  /* Success & error messages */
+  .message-box {
+    display:flex; 
+    flex-direction:column; 
+    align-items:center; 
+    justify-content:center; 
+    height:100vh; 
+    font-family:Arial, sans-serif; 
+    background-color:#f4f4f4;
+  }
+  .message-success { color:#28a745; }
+  .message-error { color:#dc3545; }
+  .message-box a {
+    margin-top:10px; 
+    text-decoration:none; 
+    color:#fff; 
+    background-color:#28a745; 
+    padding:10px 20px; 
+    border-radius:5px; 
+    transition: background-color 0.3s;
+  }
+  .message-box a:hover { background-color:#218838; }
+</style>
+
+</head>
+<body>
+
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Profile</h2>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow p-4">
+
+        <!-- Profile Photo -->
+        <div class="text-center">
+          {% if photo %}
+            <img src="{{ url_for('static', filename='uploads/' + photo) }}" class="profile-pic" alt="Profile Photo">
+          {% else %}
+            <img src="{{ url_for('static', filename='uploads/default.png') }}" class="profile-pic" alt="Profile Photo">
+          {% endif %}
+        </div>
+
+        <!-- User Info -->
+        <div id="userInfo">
+          <p><strong>Name:</strong> {{ name }}</p>
+          <p><strong>Email:</strong> {{ email }}</p>
+          <p><strong>Phone:</strong> {{ phone }}</p>
+          <p><strong>Address:</strong> {{ address }}</p>
+          <button class="btn btn-primary w-100 mb-3" id="editProfileBtn">Edit Profile</button>
+        </div>
+
+        <!-- Edit Profile Form -->
+        <form id="editProfileForm" style="display:none;" method="POST" action="{{ url_for('update_profile') }}" enctype="multipart/form-data">
+          <div class="mb-3"><label class="form-label">Name</label><input type="text" class="form-control" name="name" value="{{ name }}"></div>
+          <div class="mb-3"><label class="form-label">Email</label><input type="email" class="form-control" name="email" value="{{ email }}"></div>
+          <div class="mb-3"><label class="form-label">Phone</label><input type="text" class="form-control" name="phone" value="{{ phone }}"></div>
+          <div class="mb-3"><label class="form-label">Address</label><input type="text" class="form-control" name="address" value="{{ address }}"></div>
+          <div class="mb-3"><label class="form-label">Change Profile Photo</label><input type="file" class="form-control" name="profile_photo"></div>
+          <button type="submit" class="btn btn-success w-100 mb-3">Update Info</button>
+        </form>
+
+        <!-- Change Password -->
+        <div id="passwordSection">
+          <button class="btn btn-warning w-100 mb-3" id="changePasswordBtn">Change Password</button>
+          <form id="changePasswordForm" style="display:none;" method="POST" action="{{ url_for('change_password') }}">
+            <div class="mb-3"><label class="form-label">New Password</label><input type="password" class="form-control" name="new_password"></div>
+            <div class="mb-3"><label class="form-label">Confirm Password</label><input type="password" class="form-control" name="confirm_password"></div>
+            <button type="submit" class="btn btn-success w-100 mb-3">Update Password</button>
+          </form>
+        </div>
+
+        <!-- Dark Mode -->
+        <div class="text-center mb-3">
+          <button class="btn btn-secondary" id="darkModeToggle">Dark Mode</button>
+        </div>
+
+        <!-- Bottom Buttons -->
+        <div class="btn-group-full">
+          <a href="{{ url_for('home') }}" class="btn btn-primary">Go to Home</a>
+          <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('editProfileBtn').addEventListener('click', function(){
+    document.getElementById('userInfo').style.display = 'none';
+    document.getElementById('editProfileForm').style.display = 'block';
+  });
+  document.getElementById('changePasswordBtn').addEventListener('click', function(){
+    document.getElementById('changePasswordForm').style.display = 'block';
+  });
+  document.getElementById('darkModeToggle').addEventListener('click', function(){
+    document.body.classList.toggle('dark-mode');
+    document.querySelector('.card').classList.toggle('dark-mode');
+  });
+</script>
+
+</body>
+</html>
